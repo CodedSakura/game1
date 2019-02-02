@@ -1,0 +1,17 @@
+.main-container {
+  //padding-bottom: 1em;
+  .game-container {
+    //min-height: unquote("calc(100vh - 2em)");
+    //display: flex;
+    //flex-direction: column;
+    .setup-by-id {
+      //padding-left: 0;
+      //padding-right: 0;
+      //flex: 1;
+      position: fixed;
+      bottom: 1em;
+      left: 1em;
+      width: unquote("calc(100% - 2em)");
+    }
+  }
+}
