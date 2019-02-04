@@ -52,7 +52,7 @@ class Game extends Component {
           <path d={`M0 0 L40 20 L0 40`} fill="none" transform={`translate(${u.x - 20}, ${u.y - 20}) rotate(${u.a}, ${20}, ${20})`}/>
           <text textAnchor="middle" x={u.x} y={Math.max(16, u.y-25)} stroke="none" fill={pc}>{p}</text>
           <text textAnchor="middle" x={u.x} y={u.y+6} stroke="none" fill="black">{u.score}</text>
-          {ps % 2 === 1 ? (() => {
+          {/*ps % 2 === 1 ? (() => {
             const q = offset(u, 850);
             const algo = (c) => {
               const o = u, l1 = o, l2 = q;
@@ -80,9 +80,8 @@ class Game extends Component {
             // }
             return <g>
               <line strokeWidth={1} x1={u.x} y1={u.y} x2={q.x} y2={q.y} stroke={f() ? "blue" : "red"}/>
-              {/*{quadrants}*/}
             </g>
-          })() : undefined}
+          })() : undefined*/}
         </g>;
       })}
     </g>;

@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import MainContext from "../Contexts/MainContext";
 import Data from "../data";
 import GameWrapper from "./GameWrapper";
+import {PROPS} from "./Game";
 
 class Play extends Component {
   constructor(props) {
@@ -63,7 +64,10 @@ class Play extends Component {
         } else if (m === "full") {
           this.props.context.redirectTo(`/setup/join/${id}`, "Server full", "danger");
         } else {
-          this.setState(s => ({gameData: Object.assign(s.gameData, JSON.parse(m.substring(m.split(":")[0].length+1)))}), () => {
+          const rw = m.split(":")[0] === "rewrite";
+          if (rw) m = m.substring(8);
+          const d = JSON.parse(m);
+          this.setState(s => ({gameData: rw ? d : Object.assign(s.gameData, d)}), () => {
             if (!this.state.initCalled) {
               this.state.initCall();
               this.setState({initCalled: true});
