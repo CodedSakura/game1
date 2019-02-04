@@ -8,4 +8,8 @@ svg {
       fill: var(--purple);
     }
   }
+
+  g:not(.me) > *:not(line) {
+    transition: all 100ms;
+  }
 }

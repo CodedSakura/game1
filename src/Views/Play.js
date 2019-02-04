@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import MainContext from "../Contexts/MainContext";
 import Data from "../data";
 import GameWrapper from "./GameWrapper";
+import {PROPS} from "./Game";
 
 class Play extends Component {
   constructor(props) {
@@ -61,14 +62,20 @@ class Play extends Component {
         } else if (m === "taken") {
           this.props.context.redirectTo(`/setup/join/${id}`, "Username already taken", "danger");
         } else if (m === "full") {
-          this.props.context.redirectTo(`/setup/join/${id}`, "Server full", "danger");
+          this.props.context.redirectTo(`/`, "Server full", "danger");
         } else {
-          this.setState(s => ({gameData: Object.assign(s.gameData, JSON.parse(m.substring(m.split(":")[0].length+1)))}), () => {
+          const b = m.split(":")[0] === "rewrite";
+          if (b) m = m.substring(8);
+          // console.log(m);
+          const d = JSON.parse(m);
+          this.setState(s => ({gameData: b ? d : Object.assign(s.gameData, d)}), () => {
             if (!this.state.initCalled) {
               this.state.initCall();
               this.setState({initCalled: true});
             }
           });
+          if (d[this.state.username] && !d[this.state.username].x)
+            this.wsSend("u", {[this.state.username]: Object.assign(PROPS.defaultValue(), d[this.state.username])});
         }
       } else if (m.startsWith("d:")) {
         this.setState({data: JSON.parse(m.substring(2))});

@@ -3,8 +3,9 @@ DONE: Play: add refresh
 DONE: SetupJoin: username check
 DONE: Play: implement minimal game-play
 DONE: Play, GameWrapper, Game: Refactor code, so sent and received is only local player's data
-TODO: Game: find algorithm for line/ray hitting a circle
-TODO: Play, GameWrapper, game1: remove player from field
-TODO: Play: implement user limit
+DONE: Game: find algorithm for line/ray hitting a circle
+DONE: Play, GameWrapper, game1: remove player from field
+DONE: Play: implement user limit
 TODO: SetupJoin: <enter> submitting
-TODO: SetupList: onsubmit
+DONE: SetupList: onsubmit
+TODO: SetupJoin: Passwords...
