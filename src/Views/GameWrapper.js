@@ -48,16 +48,16 @@ class GameWrapper extends Component {
 
   keyListener(e) {
     if (e.type === "keyup") {
-      this.activeKeys.delete(e.key);
+      this.activeKeys.delete(e.code);
     } else if (e.type === "keydown") {
-      if (e.key === " ") e.preventDefault();
-      if (!this.activeKeys.has(e.key) && this.actionList[e.key]) {
+      if (e.code === "Space") e.preventDefault();
+      if (!this.activeKeys.has(e.code) && this.actionList[e.code]) {
         const d1 = this.props.data;
         const data = d1[this.props.me];
-        this.actionList[e.key](data, this.props.me);
+        this.actionList[e.code](data, this.props.me);
         this.props.updateData(d1);
       }
-      this.activeKeys.add(e.key);
+      this.activeKeys.add(e.code);
     }
   }
 

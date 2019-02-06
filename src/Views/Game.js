@@ -16,12 +16,12 @@ class Game extends Component {
 
   componentDidMount() {
     this.props.setMoveList({
-      "q": d => move(d, 0.3, true ), "e": d => move(d, -0.3, true ),
-      "w": d => move(d, 1  , false), "s": d => move(d, -0.7  , false),
-      "a": d => d.a--, "d": d => d.a++
+      "KeyQ": d => move(d, 0.3, true ), "KeyE": d => move(d, -0.3, true ),
+      "KeyW": d => move(d, 1  , false), "KeyS": d => move(d, -0.7  , false),
+      "KeyA": d => d.a--, "KeyD": d => d.a++
     });
     this.props.setActionList({
-      " ": (_, m) => {
+      "Space": (_, m) => {
         if (this.state.lastShot + 500 > new Date().getTime()) return;
         this.setState({lastShot: new Date().getTime()});
         this.props.wsSend("e", m)
