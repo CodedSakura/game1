@@ -101,7 +101,8 @@ class SetupJoin extends Component {
       <label htmlFor="password">Password (leave blank if none): </label>
       <input type="password" name="password" className={"form-control" + this.state.verify.password} id="password" value={this.state.password} onChange={this.handleChange}/>
       <br/>
-      <Button color="success" onClick={this.handleSubmit} type="submit">Start</Button>
+      {/*<Button color="success" onClick={this.handleSubmit}>Start</Button>*/}
+      <Button color="success" type="submit">Start</Button>
     </form>;
   }
 }
