@@ -12,23 +12,33 @@ class GameWrapper extends Component {
     this.actionList = {};
     this.eventCatch = () => {};
     this.reset = this.reset.bind(this);
+    this.keyListener = this.keyListener.bind(this);
+    this.keyListener = this.keyListener.bind(this);
+    this.resizeListener = this.resizeListener.bind(this);
   }
 
   componentDidMount() {
     this.props.initListener(this.initListener.bind(this));
   }
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.keyListener);
+    document.removeEventListener("keyup", this.keyListener);
+    window.removeEventListener("resize", this.resizeListener);
+  }
 
   initListener() {
     this.props.bindListener(this.eventListener.bind(this));
-    document.addEventListener("keydown", this.keyListener.bind(this));
-    document.addEventListener("keyup", this.keyListener.bind(this));
-    window.addEventListener("resize",
-      () => this.setState({scale: (this.svg.current.getBoundingClientRect().width - 30) / PROPS.size}, () => console.log(this.svg.current.getBoundingClientRect().width - 30, PROPS.size))
-    );
+    document.addEventListener("keydown", this.keyListener);
+    document.addEventListener("keyup", this.keyListener);
+    window.addEventListener("resize", this.resizeListener);
     this.reset(this.props.me);
     this.setState({scale: (this.svg.current.getBoundingClientRect().width - 30) / PROPS.size});
     setInterval(this.moveWrapper.bind(this), PROPS.moveDelay);
     setInterval(() => this.props.wsSend("u", {[this.props.me]: this.props.data[this.props.me]}), 100);
+  }
+
+  resizeListener() {
+    this.setState({scale: (this.svg.current.getBoundingClientRect().width - 30) / PROPS.size}, () => console.log(this.svg.current.getBoundingClientRect().width - 30, PROPS.size));
   }
 
   reset(user) {

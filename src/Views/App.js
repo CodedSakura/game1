@@ -68,7 +68,7 @@ class App extends Component {
       <Route render={({location}) => (
         <div>
         <TransitionGroup className="fade-obj">
-        <CSSTransition key={location.key} classNames="fade" timeout={100}>
+        <CSSTransition key={(() => {console.log(location.key);return location.key})()} classNames="fade" timeout={100}>
           <Container fluid className="main-container">
             {this.state.redirectReason ? <Alert color={this.state.redirectContext} isOpen={this.state.redirectPath === location.pathname} toggle={this.alertDismissed.bind(this)}>{this.state.redirectReason}</Alert> : undefined}
             <Switch location={location}>

@@ -26,6 +26,7 @@ class Play extends Component {
     document.title = "Play";
     if (this.props.context.data) {
       this.setState({data: {maxPlayers: this.props.context.data.maxPlayers, username: this.props.context.data.username}});
+      // console.log("ws init");
       this.wsInit();
     } else if (Data.debug && document.location.pathname === "/play") {
       this.props.context.redirectTo("/startDEV");
@@ -33,12 +34,13 @@ class Play extends Component {
       this.props.context.redirectTo("/");
     }
   }
-
   componentWillUnmount() {
     if (this.ws) this.ws.close(3001, "going away, cya");
+    if (this.state.pingTimer) clearTimeout(this.state.pingTimer);
   }
 
   wsInit() {
+    console.log("init ws", new Date().getTime(), this.ws);
     const {id} = this.props.match.params;
     const {data} = this.props.context;
     this.setState({username: data.username});
@@ -46,6 +48,7 @@ class Play extends Component {
     if (this.ws) this.ws.close(3012, "restarting, brb");
     this.ws = new WebSocket(Data.wsAddr);
     this.ws.onopen = () => {
+      // console.log(this.ws);
       if (id) this.ws.send(`new:cli:${id}:${data.username}:${data.password || ""}`);
       else if (data) this.ws.send(`new:host:${JSON.stringify(data)}`);
       this.ws.send(`ping:${new Date().getTime()}`);
@@ -60,7 +63,7 @@ class Play extends Component {
         if (m === "404") {
           this.props.context.redirectTo("/", "Game has ended or does not exist", "danger");
         } else if (m === "taken") {
-          this.props.context.redirectTo(`/setup/join/${id}`, "Username already taken", "danger");
+          // this.props.context.redirectTo(`/setup/join/${id}`, "Username already taken", "danger");
         } else if (m === "full") {
           this.props.context.redirectTo(`/`, "Server full", "danger");
         } else {
@@ -98,7 +101,6 @@ class Play extends Component {
     if (this.ws.readyState === 1)
       this.ws.send(`ping:${new Date().getTime()}`);
   }
-
   wsSend(t, m) {
     if (!this.ws || this.ws.readyState !== 1 || !this.state.data.id) setTimeout(() => this.wsSend(t, m), 10);
     else this.ws.send(`${t}:${this.state.data.id}:${JSON.stringify(m)}`);
@@ -107,38 +109,42 @@ class Play extends Component {
   bindListener(q) {
     this.setState({callback: q});
   }
-
   initListener(q) {
     this.setState({initCall: q});
   }
-
   updateData(d) {
     this.setState({gameData: d});
   }
 
   render() {
-    return <div>
-      <h2 className="title">Game [{this.state.data.id || "?"}]<small><Link to={"/"}>Back</Link></small></h2>
+
+    const play = <div>
+      <h2 className="title">Game [{this.state.data.id || "?"}]
+        <small><Link to={"/"}>Back</Link></small>
+      </h2>
       {
         this.state.loading ?
-        <div className="title">
-          <h4>Joining game '{this.props.match.params.id}'...</h4>
-          Please wait
-        </div> : <div className="title"><h4>{this.state.data.name}</h4></div>
+          <div className="title">
+            <h4>Joining game '{this.props.match.params.id}'...</h4>
+            Please wait
+          </div> : <div className="title"><h4>{this.state.data.name}</h4></div>
       }
       <div className="row">
-        <GameWrapper loading={this.state.loading} data={this.state.gameData} me={this.state.username} host={this.state.data.host}
+        <GameWrapper loading={this.state.loading} data={this.state.gameData} me={this.state.username}
+                     host={this.state.data.host}
                      wsSend={this.wsSend.bind(this)} bindListener={this.bindListener.bind(this)}
                      initListener={this.initListener.bind(this)} updateData={this.updateData.bind(this)}/>
         <div className="col">
           <p>
-          Current Players ({(this.state.data.players || []).length}/{this.state.data.maxPlayers || "?"}):<br/>
-          {(this.state.data.players || []).map((v, k) => <span key={k}>{v}<br/></span>)}
+            Current Players ({(this.state.data.players || []).length}/{this.state.data.maxPlayers || "?"}):<br/>
+            {(this.state.data.players || []).map((v, k) => <span key={k}>{v}<br/></span>)}
           </p>
           <p>Ping: {this.state.ping.length === 0 ? "?" : (this.state.ping.reduce((p, c) => p + c, 0) / this.state.ping.length).toFixed(1)}ms</p>
         </div>
       </div>
     </div>;
+    // console.log(play);
+    return play;
   }
 }
 

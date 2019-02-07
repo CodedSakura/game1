@@ -4,12 +4,14 @@ import Data from "../data";
 import {Button, Input, InputGroup, InputGroupAddon} from "reactstrap";
 
 import "../Style/SetupList.css";
+import MainContext from "../Contexts/MainContext";
 
 class SetupList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: {}
+      data: {},
+      joinID: ""
     };
     this.wsInit = this.wsInit.bind(this);
   }
@@ -42,28 +44,43 @@ class SetupList extends Component {
 
   joinGame(e) {
     e.preventDefault();
-    console.log(e.target.tagName);
+    if (!this.state.joinID) return;
+    this.props.context.redirectTo(`/setup/join/${this.state.joinID}`);
+  }
+
+  handleChange({target}) {
+    this.setState({[target.name]: target.value});
+  }
+
+  handleScroll(e) {
+    const {target, deltaY} = e;
+    e.preventDefault();
+    this.setState(state => (
+      {[target.name]: Math.max(Math.min((state[target.name] || 0) - Math.sign(deltaY), target.max || Infinity), target.min)}
+    ));
   }
 
   render() {
     return <div className="game-container">
       <div className="container-fluid">
         <h2>List public games <small><Link to={"/"}>Back</Link></small></h2>
-        {this.state.data ? (Object.keys(this.state.data).length ?
+        {this.state.data ? (Object.keys(this.state.data).filter(v => !this.state.data[v].private).length ?
           Object.keys(this.state.data).map(v => {
             const g = this.state.data[v];
+            if (g.private) return undefined;
             return <div key={v}><Link to={`/setup/join/${v}`}>{g.name}</Link> by {g.host} ({g.players.length}/{g.maxPlayers})</div>
           })
         : "No games currently started") : "Searching for games..."}
       </div>
       <form onSubmit={this.joinGame.bind(this)} className="setup-by-id">
         <InputGroup>
-          <Input placeholder="Join game using ID"/>
-          <InputGroupAddon addonType={"append"}><Button>Go</Button></InputGroupAddon>
+          <Input placeholder="Join game using ID" type="number" value={this.state.joinID} name={"joinID"}
+                 onChange={this.handleChange.bind(this)} onWheelCapture={this.handleScroll.bind(this)} min={0}/>
+          <InputGroupAddon addonType={"append"}><Button type="submit">Go</Button></InputGroupAddon>
         </InputGroup>
       </form>
     </div>;
   }
 }
 
-export default SetupList;
+export default (props) => <MainContext.Consumer>{context => <SetupList {...props} context={context}/>}</MainContext.Consumer>;

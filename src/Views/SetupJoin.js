@@ -73,8 +73,10 @@ class SetupJoin extends Component {
     };
     verify.username = set(this.state.username.length > 0 && (this.state.username) && !this.state.data.players.includes(this.state.username));
     verify.password = set(this.state.password.length === 0 || this.state.password === this.state.data.password);
-    if (!valid) this.setState({verify: verify});
-    else {
+    if (!valid) {
+      console.log(this.state.username, this.state.password, this.state.data.players);
+      this.setState({verify: verify});
+    } else {
       if (this.state.remember) {
         const d = new Date();
         d.setFullYear(d.getFullYear() + 1);
@@ -92,14 +94,14 @@ class SetupJoin extends Component {
     return <form onSubmit={this.handleSubmit}>
       <h2>Joining "{this.state.data ? this.state.data.name : <i>[LOADING NAME]</i>}" <small><Link to={"/setup/list"}>Back</Link></small></h2>
       <label htmlFor="username">Your player name: </label>
-      <input type="text" name="username" className={"form-control" + this.state.verify.username} id="username" value={this.state.username} onChange={this.handleChange} required/>
+      <input type="text" name="username" className={"form-control" + this.state.verify.username} id="username" value={this.state.username} onChange={this.handleChange} required autoFocus/>
       <input type="checkbox" id="remember" name="remember" value={this.state.remember} onChange={this.handleCheck}/>
       <label htmlFor="remember"> Remember username</label>
       <br/>
       <label htmlFor="password">Password (leave blank if none): </label>
       <input type="password" name="password" className={"form-control" + this.state.verify.password} id="password" value={this.state.password} onChange={this.handleChange}/>
       <br/>
-      <Button color="success" onClick={this.handleSubmit}>Start</Button>
+      <Button color="success" onClick={this.handleSubmit} type="submit">Start</Button>
     </form>;
   }
 }

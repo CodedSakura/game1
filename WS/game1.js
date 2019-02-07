@@ -12,7 +12,7 @@ const handle = (conn, req) => {
   log(`open: ${key}`);
 
   conn.on("message", m => {
-    // if (!m.startsWith("ping:") && !m.startsWith("u:") && !m.startsWith("e:")) log(m);
+    if (!m.startsWith("ping:") && !m.startsWith("u:") && !m.startsWith("e:")) log(m);
     if (m.startsWith("ping:")) {
       conn.send(m);
     } else if (m.startsWith("u:")) { // updated data -> u: & save
@@ -64,7 +64,7 @@ const handle = (conn, req) => {
         conn.send(`u:{}`);
         games_l[id] = {host: conn, players: [conn]};
         games_d[id] = {};
-        for (const cn of hubs) if (c.readyState === 1) cn.send("d:" + JSON.stringify(games));
+        for (const cn of hubs) if (cn.readyState === 1) cn.send("d:" + JSON.stringify(games));
       }
     }
   });
