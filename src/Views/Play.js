@@ -28,8 +28,8 @@ class Play extends Component {
       this.setState({data: {maxPlayers: this.props.context.data.maxPlayers, username: this.props.context.data.username}});
       // console.log("ws init");
       this.wsInit();
-    } else if (Data.debug && document.location.pathname === "/play") {
-      this.props.context.redirectTo("/startDEV");
+    // } else if (Data.debug && document.location.pathname === "/play") {
+    //   this.props.context.redirectTo("/startDEV");
     } else {
       this.props.context.redirectTo("/");
     }
@@ -63,7 +63,7 @@ class Play extends Component {
         if (m === "404") {
           this.props.context.redirectTo("/", "Game has ended or does not exist", "danger");
         } else if (m === "taken") {
-          // this.props.context.redirectTo(`/setup/join/${id}`, "Username already taken", "danger");
+          this.props.context.redirectTo(`/setup/join/${id}`, "Username already taken", "danger");
         } else if (m === "full") {
           this.props.context.redirectTo(`/`, "Server full", "danger");
         } else {
@@ -117,8 +117,7 @@ class Play extends Component {
   }
 
   render() {
-
-    const play = <div>
+    return <div>
       <h2 className="title">Game [{this.state.data.id || "?"}]
         <small><Link to={"/"}>Back</Link></small>
       </h2>
@@ -143,8 +142,6 @@ class Play extends Component {
         </div>
       </div>
     </div>;
-    // console.log(play);
-    return play;
   }
 }
 
